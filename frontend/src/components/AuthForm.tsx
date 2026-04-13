@@ -1,8 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { log } from "console";
-import { useState } from "react";
+import axios from "axios";
+
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { AuthContext } from "../context/AuthContext";
 
 const schema = z.object({
   email: z.string().email({ message: "invlaid email address." }),
@@ -22,8 +24,23 @@ const AuthForm = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (data: FormData) => {
-    console.log("form submitted", data);
+  const auth = useContext(AuthContext);
+  const onSubmit = async (data: FormData) => {
+    try {
+      const url = isLogin
+        ? "http://localhost:5000/api/login"
+        : "http://localhost:5000/api/register";
+      const res = await axios.post(url, data);
+      if (isLogin && res.data.token) {
+        auth?.login(res.data.token);
+        alert("login successful");
+      } else {
+        alert("registration Successful! please login");
+        setIsLogin(true);
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || "an error occured");
+    }
   };
   return (
     <div className="max-w-md mx-auto mt-12 p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
