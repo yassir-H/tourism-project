@@ -31,6 +31,7 @@ const AuthForm = () => {
         ? "http://localhost:5000/api/login"
         : "http://localhost:5000/api/register";
       const res = await axios.post(url, data);
+
       if (isLogin && res.data.token) {
         auth?.login(res.data.token);
         alert("login successful");
@@ -39,6 +40,7 @@ const AuthForm = () => {
         setIsLogin(true);
       }
     } catch (err: any) {
+      console.error("full Error Object:", err);
       alert(err.response?.data?.message || "an error occured");
     }
   };

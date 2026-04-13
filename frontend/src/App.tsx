@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import AuthForm from "./components/AuthForm";
 
 interface Destination {
   _id: string;
@@ -21,6 +22,10 @@ function App() {
   }, []);
   return (
     <div className="p-4">
+      <section className="mb-12">
+        <AuthForm />
+      </section>
+
       <h1 className="text-2xl font-bold mb-4">Destinations</h1>
 
       {error && <p className="text-red-500">{error}</p>}

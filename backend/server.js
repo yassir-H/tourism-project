@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -52,6 +54,12 @@ const DestinationSchema = new mongoose.Schema({
 
 const Destination = mongoose.model('Destination', DestinationSchema)
 
+const UserSchema = new mongoose.Schema({
+    email: {type: String, required: true, unique: true},
+    password: {type: number, required: true}
+})
+const User = mongoose.model('User', UserSchema);
+
 // to fill the db we create a seed route
 app.post('/api/destinations/seed', async (req,res)=>{
     const sampleDestinations = [
@@ -67,6 +75,36 @@ app.get('/api/destinations', async (req,res) =>{
     const destinations = await Destination.find();
     res.send(destinations)
 })
+app.post('/api/register', async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        
+        const user = new User({ 
+            email: req.body.email, 
+            password: hashedPassword 
+        });
+
+        await user.save();
+        res.status(201).send({ message: "Registration Successful!" });
+    } catch (error) {
+        res.status(400).send({ message: "User already exists or data invalid" });
+    }
+});
+
+
+app.post('/api/login', async (req, res) => {
+ 
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send({ message: "Invalid Email or Password" });
+
+    
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) return res.status(400).send({ message: "Invalid Email or Password" });
+
+    
+    const token = jwt.sign({ _id: user._id }, 'secretKey'); 
+    res.send({ token, message: "Login Successful!" });
+});
 const port = 5000;
 app.listen(port , ()=> console.log(`server running on port ${port}`)
 );
