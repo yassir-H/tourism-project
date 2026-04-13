@@ -12,11 +12,11 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(
-    localStorage.getItme("token"),
+    localStorage.getItem("token"),
   );
 
   const login = (newToken: string) => {
-    localStorage.setItem('"token', newToken);
+    localStorage.setItem("token", newToken);
     setToken(newToken);
   };
   const logout = () => {
