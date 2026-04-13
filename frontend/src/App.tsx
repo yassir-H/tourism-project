@@ -1,3 +1,4 @@
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import AuthForm from "./components/AuthForm";
@@ -20,34 +21,63 @@ function App() {
       .then((res) => setDestinations(res.data))
       .catch((err) => setError(err.message));
   }, []);
+
   return (
-    <div className="p-4">
-      <section className="mb-12">
-        <AuthForm />
-      </section>
+    <Router>
+      <nav className="p-4 bg-white shadow-sm flex justify-between items-center">
+        <Link to="/" className="text-xl font-bold text-blue-600">
+          TourismProject
+        </Link>
+        <Link to="/login" className="bg-blue-600 text-white px-4 py-2 rounded">
+          Login
+        </Link>
+      </nav>
 
-      <h1 className="text-2xl font-bold mb-4">Destinations</h1>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="p-8 bg-gray-50 min-h-screen">
+              <h1 className="text-3xl font-bold mb-8 text-center">
+                Explore Destinations
+              </h1>
 
-      {error && <p className="text-red-500">{error}</p>}
+              {error && <p className="text-red-500 text-center">{error}</p>}
 
-      <div className="grid grid-cols-1 gap-4">
-        {destinations.map((d) => (
-          <div key={d._id} className="border p-4 rounded">
-            <img
-              src={d.image}
-              alt={d.title}
-              className="w-32 h-32 object-cover"
-            />
-            <h3 className="font-bold">{d.title}</h3>
-            <p>{d.description}</p>
-            <p className="text-blue-600">${d.price}</p>
-            <button className="bg-blue-500 text-white p-2 mt-2">
-              Book Now
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {destinations.map((d) => (
+                  <div
+                    key={d._id}
+                    className="bg-white p-4 rounded shadow hover:shadow-lg transition-shadow"
+                  >
+                    <img
+                      src={d.image}
+                      className="w-full h-48 object-cover rounded"
+                      alt={d.title}
+                    />
+                    <h3 className="font-bold mt-4 text-lg">{d.title}</h3>
+                    <p className="text-gray-600 text-sm mb-2">
+                      {d.description}
+                    </p>
+                    <div className="flex justify-between items-center mt-4">
+                      <p className="text-blue-600 font-bold text-xl">
+                        ${d.price}
+                      </p>
+                      <button className="bg-blue-500 text-white px-4 py-2 rounded text-sm">
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          }
+        />
+
+        <Route path="/login" element={<AuthForm />} />
+      </Routes>
+    </Router>
   );
 }
+
 export default App;
