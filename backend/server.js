@@ -6,6 +6,9 @@ const hpp = require('hpp')
 const mongoSanitize = require('express-mongo-sanitize')
 const rateLimit = require('express-rate-limit')
 
+mongoose.connect("mongodb://127.0.0.1:27017/tourism_db")
+.then(()=> console.log("connected to mongodb"))
+.catch((err)=> console.error("mongodb connection error", err));
 const app = express();
 app.use((req, res, next) => {
     Object.defineProperty(req, 'query', {
