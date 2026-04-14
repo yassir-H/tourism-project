@@ -73,7 +73,8 @@ const Destination = mongoose.model('Destination', DestinationSchema)
 
 const UserSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
-    password: {type: String, required: true}
+    password: {type: String, required: true},
+    favorites: [{type: mongoose.Schema.Types.ObjectId, ref: 'Destination'}]
 })
 const User = mongoose.model('User', UserSchema);
 
@@ -122,6 +123,23 @@ app.get('/api/destinations/:id', async (req,res) =>{
     }
 })
 
+
+app.post('/api/favorites/:id', authenticate, async(req,res)=>{
+    try{
+        const user = await User.findById(req.user._id);
+        const  index = user.favorites.indexOf(req.params.id)
+    if(index === -1){
+        user.favorites.push(req.params.id);
+    }else{
+        user.favorites.splice(index, 1)
+    }
+await user.save();
+res.send(user.favorites);
+
+    }catch(error){
+        res.status(400).send({message: "error updating favorites"})
+    }
+});
 app.get('/api/my-bookings', authenticate, async(req,res) =>{
     try {
         const myBookings = await Booking.find({userId: req.user._id})

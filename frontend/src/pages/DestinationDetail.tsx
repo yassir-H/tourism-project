@@ -39,7 +39,20 @@ const DestinationDetail = () => {
       alert("booking failed");
     }
   };
-
+  const toggleFavorite = async () => {
+    try {
+      await axios.post(
+        `http://localhost:5000/api/favorites/${id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${auth?.token}` },
+        },
+      );
+      alert(" favorites updated");
+    } catch (err) {
+      alert("error updating favorites");
+    }
+  };
   if (!destination) return <p>Loading...</p>;
   return (
     <div className="p-8">
@@ -50,6 +63,9 @@ const DestinationDetail = () => {
         className="w-full h-64 object-cover my-4"
       />
       <p>{destination.description}</p>
+      <button className="border p-2 mb-4" onClick={toggleFavorite}>
+        save to favorite
+      </button>
 
       <form onSubmit={handleBooking} className="mt-6 border p-4 rounded">
         <h3 className="font-bold mb-2">Book this Trip</h3>
