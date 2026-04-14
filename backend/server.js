@@ -121,6 +121,16 @@ app.get('/api/destinations/:id', async (req,res) =>{
         res.status(404).send({message: "destination not found"})
     }
 })
+
+app.get('/api/my-bookings', authenticate, async(req,res) =>{
+    try {
+        const myBookings = await Booking.find({userId: req.user._id})
+        .populate("destinationId");
+        res.send(myBookings)
+    }catch(error){
+        res.status(500).send({message: "error fetching bookings"})
+    }
+})
 app.post('/api/register', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);

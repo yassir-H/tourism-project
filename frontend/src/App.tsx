@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AuthForm from "./components/AuthForm";
 import DestinationDetail from "./pages/DestinationDetail";
+import Dashboard from "./pages/Dashboard";
 interface Destination {
   _id: string;
   title: string;
@@ -30,6 +31,9 @@ function App() {
         </Link>
         <Link to="/login" className="bg-blue-600 text-white px-4 py-2 rounded">
           Login
+        </Link>
+        <Link to="/dashboard" className="mr-4 text-gray-600">
+          My dasboard
         </Link>
       </nav>
 
@@ -79,6 +83,7 @@ function App() {
 
         <Route path="/login" element={<AuthForm />} />
         <Route path="/destination/:id" element={<DestinationDetail />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
