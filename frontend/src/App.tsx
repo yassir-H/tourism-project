@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import AuthForm from "./components/AuthForm";
-
+import DestinationDetail from "./pages/DestinationDetail";
 interface Destination {
   _id: string;
   title: string;
@@ -63,9 +63,12 @@ function App() {
                       <p className="text-blue-600 font-bold text-xl">
                         ${d.price}
                       </p>
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded text-sm">
-                        Book Now
-                      </button>
+                      <Link
+                        to={`/destination/${d._id}`}
+                        className="bg-blue-500 text-white px-4 py-2 rounded text-sm"
+                      >
+                        View details
+                      </Link>
                     </div>
                   </div>
                 ))}
@@ -75,6 +78,7 @@ function App() {
         />
 
         <Route path="/login" element={<AuthForm />} />
+        <Route path="/destination/:id" element={<DestinationDetail />} />
       </Routes>
     </Router>
   );

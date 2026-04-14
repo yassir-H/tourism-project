@@ -6,7 +6,8 @@ const cors = require('cors');
 const helmet = require('helmet')
 const hpp = require('hpp')
 const mongoSanitize = require('express-mongo-sanitize')
-const rateLimit = require('express-rate-limit')
+const rateLimit = require('express-rate-limit');
+const { number } = require('joi');
 
 mongoose.connect("mongodb://127.0.0.1:27017/tourism_db")
 .then(()=> console.log("connected to mongodb"))
@@ -56,7 +57,7 @@ const Destination = mongoose.model('Destination', DestinationSchema)
 
 const UserSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
-    password: {type: number, required: true}
+    password: {type: String, required: true}
 })
 const User = mongoose.model('User', UserSchema);
 
@@ -74,6 +75,14 @@ app.post('/api/destinations/seed', async (req,res)=>{
 app.get('/api/destinations', async (req,res) =>{
     const destinations = await Destination.find();
     res.send(destinations)
+})
+
+app.get('/api/destinations/:id', async (req,res) =>{
+  try{  const destination = await Destination.findById(req.params.id)
+    res.send(destination);}
+    catch(error){
+        res.status(404).send({message: "destination not found"})
+    }
 })
 app.post('/api/register', async (req, res) => {
     try {
