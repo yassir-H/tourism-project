@@ -61,6 +61,24 @@ const UserSchema = new mongoose.Schema({
 })
 const User = mongoose.model('User', UserSchema);
 
+const BookingSchema = new mongoose.Schema({
+    userId: { type : mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    destinationId : {type :mongoose.Schema.Types.ObjectId, ref: 'Destination', required : true},
+    date : {type: String, required: true}
+})
+
+const Booking = mongoose.model('Booking', BookingSchema);
+app.post('/api/bookings', async (req,res) =>{
+    try {
+        const { userId , destinationId, date} = req.body;
+        const newBooking = new Booking({userId, destinationId, date});
+        await newBooking.save();
+        res.status(201).send({message: "Booking saved to Database"})
+
+    }catch (error){
+        res.status(400).send({message : "Error saving booking"})
+    }
+})
 // to fill the db we create a seed route
 app.post('/api/destinations/seed', async (req,res)=>{
     const sampleDestinations = [

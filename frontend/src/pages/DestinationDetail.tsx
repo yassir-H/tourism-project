@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 const DestinationDetail = () => {
+  const auth = useContext(AuthContext);
   const { id } = useParams();
   const [destination, setDestination] = useState<any>(null);
   const [date, setDate] = useState("");
@@ -16,7 +18,21 @@ const DestinationDetail = () => {
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`booking request sent for ${destination.title} on ${date}`);
+    if (!auth?.token) {
+      alert("please login to book a trip");
+      return;
+    }
+
+    try {
+      await axios.post("http://localhost:5000/api/bookings", {
+        userId: "69dd655b7d6ceb9f07152f5f", //testing id from db
+        destinationId: id,
+        date: date,
+      });
+      alert("Booking successful");
+    } catch (err) {
+      alert("booking failed");
+    }
   };
 
   if (!destination) return <p>Loading...</p>;
