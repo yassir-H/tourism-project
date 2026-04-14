@@ -140,14 +140,23 @@ res.send(user.favorites);
         res.status(400).send({message: "error updating favorites"})
     }
 });
-app.get('/api/my-bookings', authenticate, async(req,res) =>{
-    try {
-        const myBookings = await Booking.find({userId: req.user._id})
-        .populate("destinationId");
-        res.send(myBookings)
-    }catch(error){
-        res.status(500).send({message: "error fetching bookings"})
+
+app.get('/api/dashboard', authenticate, async (req, res)=>{
+    try{
+        const user = await User.findById(req.user._id).populate('favorites');
+
+        const bookings = await Booking.find({userId: req.user._id}).populate('destinationId')
+
+        console.log("user favorites", user.favorites)
+    res.send({
+        favorites: user.favorites,
+        bookings: bookings
+    })
+
+    }catch (error){
+        res.status(500).send({message: "error fetching dashboard data"})
     }
+
 })
 app.post('/api/register', async (req, res) => {
     try {
