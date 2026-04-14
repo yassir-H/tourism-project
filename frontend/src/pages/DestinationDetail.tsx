@@ -24,11 +24,16 @@ const DestinationDetail = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/bookings", {
-        userId: "69dd655b7d6ceb9f07152f5f", //testing id from db
-        destinationId: id,
-        date: date,
-      });
+      await axios.post(
+        "http://localhost:5000/api/bookings",
+        {
+          destinationId: id,
+          date: date,
+        },
+        {
+          headers: { Authorization: `Bearer ${auth.token}` },
+        },
+      );
       alert("Booking successful");
     } catch (err) {
       alert("booking failed");

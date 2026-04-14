@@ -41,6 +41,22 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
+const authenticate = (req,res,next) =>{
+    const authHeader = req.header('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer')){
+        return  res.status(401).send("access denied");
+    }
+    const token = authHeader.split(' ')[1];
+try{
+const verified = jwt.verify(token, 'secretKey');
+req.user = verified;
+next();
+}catch(err) {
+    res.status(400).send("invalid token")
+}
+
+}
+
 app.get('/api/test', (req,res)=>{
     res.send({message: "Backend is connected  man"})
 });
@@ -68,10 +84,13 @@ const BookingSchema = new mongoose.Schema({
 })
 
 const Booking = mongoose.model('Booking', BookingSchema);
-app.post('/api/bookings', async (req,res) =>{
+app.post('/api/bookings', authenticate, async (req,res) =>{
     try {
-        const { userId , destinationId, date} = req.body;
-        const newBooking = new Booking({userId, destinationId, date});
+        const newBooking = new Booking(
+            {userId: req.user._id,
+                 destinationId: req.body.destinationId, 
+                 date: req.body.date
+     } );
         await newBooking.save();
         res.status(201).send({message: "Booking saved to Database"})
 
