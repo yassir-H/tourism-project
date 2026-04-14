@@ -5,6 +5,8 @@ import AuthForm from "./components/AuthForm";
 import DestinationDetail from "./pages/DestinationDetail";
 import Dashboard from "./pages/Dashboard";
 import AdminPage from "./pages/Adminpage";
+import { Button } from "@/components/ui/button";
+
 interface Destination {
   _id: string;
   title: string;
@@ -30,8 +32,8 @@ function App() {
         <Link to="/" className="text-xl font-bold text-blue-600">
           TourismProject
         </Link>
-        <Link to="/login" className="bg-blue-600 text-white px-4 py-2 rounded">
-          Login
+        <Link to="/login">
+          <Button variant="outline">Login</Button>
         </Link>
         <Link to="/dashboard" className="mr-4 text-gray-600">
           My dasboard
