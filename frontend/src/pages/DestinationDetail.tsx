@@ -8,13 +8,25 @@ const DestinationDetail = () => {
   const { id } = useParams();
   const [destination, setDestination] = useState<any>(null);
   const [date, setDate] = useState("");
-
+  const [isFavorite, setIsFavorite] = useState(false);
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/destinations/${id}`)
       .then((res) => setDestination(res.data))
       .catch((err) => console.error(err));
-  }, [id]);
+
+    if (auth?.token) {
+      axios
+        .get("http://localhost:5000/api/dashboard", {
+          headers: { Authorization: `Bearer ${auth.token}` },
+        })
+        .then((res) => {
+          const favorites = res.data.favorites;
+          const found = favorites.some((f: any) => f._id === id);
+          setIsFavorite(found);
+        });
+    }
+  }, [id, auth?.token]);
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +60,9 @@ const DestinationDetail = () => {
           headers: { Authorization: `Bearer ${auth?.token}` },
         },
       );
-      alert(" favorites updated");
+      setIsFavorite(!isFavorite);
+
+      alert(isFavorite ? " removed from favorite" : "added to favorites");
     } catch (err) {
       alert("error updating favorites");
     }
@@ -64,7 +78,7 @@ const DestinationDetail = () => {
       />
       <p>{destination.description}</p>
       <button className="border p-2 mb-4" onClick={toggleFavorite}>
-        save to favorite
+        {isFavorite ? "remove from favorite " : " Add to favorite"}
       </button>
 
       <form onSubmit={handleBooking} className="mt-6 border p-4 rounded">
