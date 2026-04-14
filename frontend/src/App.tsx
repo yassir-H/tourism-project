@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AuthForm from "./components/AuthForm";
 import DestinationDetail from "./pages/DestinationDetail";
 import Dashboard from "./pages/Dashboard";
+import AdminPage from "./pages/Adminpage";
 interface Destination {
   _id: string;
   title: string;
@@ -84,6 +85,7 @@ function App() {
         <Route path="/login" element={<AuthForm />} />
         <Route path="/destination/:id" element={<DestinationDetail />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </Router>
   );

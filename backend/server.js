@@ -110,11 +110,23 @@ app.post('/api/destinations/seed', async (req,res)=>{
     res.send({message: "db seeded"})
 })
 
-app.get('/api/destinations', async (req,res) =>{
-    const destinations = await Destination.find();
-    res.send(destinations)
+app.post('/api/destinations', async (req,res) =>{
+   try{
+    const newDestination = new Destination(req.body);
+    await newDestination.save();
+    res.status(201).send({message : "new destiantion addeed successfuly"})
+   }catch (error){
+    res.status(400).send({message: "error adding destination"})
+   }
 })
-
+app.get('/api/destinations', async (req,res) =>{
+    try{
+        const destinations = await Destination.find();
+        res.send(destinations);
+    }catch(error){
+        res.status(500).send({message: "error fetching destinations"})
+    }
+});
 app.get('/api/destinations/:id', async (req,res) =>{
   try{  const destination = await Destination.findById(req.params.id)
     res.send(destination);}
@@ -147,7 +159,7 @@ app.get('/api/dashboard', authenticate, async (req, res)=>{
 
         const bookings = await Booking.find({userId: req.user._id}).populate('destinationId')
 
-        console.log("user favorites", user.favorites)
+        
     res.send({
         favorites: user.favorites,
         bookings: bookings
