@@ -5,7 +5,16 @@ import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { AuthContext } from "../context/AuthContext";
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 const schema = z.object({
   email: z.string().email({ message: "invlaid email address." }),
   password: z
@@ -45,60 +54,72 @@ const AuthForm = () => {
     }
   };
   return (
-    <div className="max-w-md mx-auto mt-12 p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-        {isLogin ? "Welcome Back" : "Create Account"}
-      </h2>
+    <div className="flex justify-center items-center min-h-[80vh] px-4">
+      <Card className="w-full max-w-md border-none shadow-none bg-transparent">
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="text-4xl font-extrabold tracking-tighter text-gray-900">
+            {isLogin ? "Welcome Back" : "Create Account"}
+          </CardTitle>
+          <CardDescription className="text-gray-500">
+            {isLogin
+              ? "Enter your credentials to continue"
+              : "Join us to start your journey"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                {...register("email")}
+                type="email"
+                placeholder="name@example.com"
+                className={`rounded-full px-4 py-6 ${errors.email ? "border-red-500" : "border-gray-200"}`}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
-          <input
-            {...register("email")}
-            type="email"
-            className={`w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition ${errors.email ? "border-red-500" : "border-gray-300"}`}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-          )}
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                {...register("password")}
+                type="password"
+                placeholder="••••••••"
+                className={`rounded-full px-4 py-6 ${errors.password ? "border-red-500" : "border-gray-200"}`}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            {...register("password")}
-            type="password"
-            className={`w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition ${errors.password ? "border-red-500" : "border-gray-300"}`}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
+            <Button
+              type="submit"
+              className="w-full rounded-full py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all active:scale-95"
+            >
+              {isLogin ? "Sign In" : "Register"}
+            </Button>
+          </form>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 active:scale-95 transition-all shadow-md"
-        >
-          {isLogin ? "Sign In" : "Register"}
-        </button>
-      </form>
-
-      <div className="mt-6 text-center">
-        <button
-          onClick={() => setIsLogin(!isLogin)}
-          className="text-blue-600 text-sm font-medium hover:underline"
-        >
-          {isLogin
-            ? "New here? Create an account"
-            : "Already have an account? Sign in"}
-        </button>
-      </div>
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-gray-500 text-sm font-medium hover:text-black transition-colors"
+            >
+              {isLogin
+                ? "New here? Create an account"
+                : "Already have an account? Sign in"}
+            </button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
