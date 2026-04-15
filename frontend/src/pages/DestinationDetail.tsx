@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
@@ -9,6 +9,7 @@ const DestinationDetail = () => {
   const [destination, setDestination] = useState<any>(null);
   const [date, setDate] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/destinations/${id}`)
@@ -31,7 +32,13 @@ const DestinationDetail = () => {
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth?.token) {
-      alert("please login to book a trip");
+      const userWantsToLogin = window.confirm(
+        "You need to login to book a trip. Go to login page?",
+      );
+      if (userWantsToLogin) {
+        navigate("/login");
+      }
+
       return;
     }
 
@@ -52,6 +59,15 @@ const DestinationDetail = () => {
     }
   };
   const toggleFavorite = async () => {
+    if (!auth?.token) {
+      const userWantsToLogin = window.confirm(
+        "you need to login to save favorites. Go to login page?",
+      );
+      if (userWantsToLogin) {
+        navigate("/login");
+      }
+      return;
+    }
     try {
       await axios.post(
         `http://localhost:5000/api/favorites/${id}`,

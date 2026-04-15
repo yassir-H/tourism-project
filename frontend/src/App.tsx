@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import AuthForm from "./components/AuthForm";
+import { AuthContext } from "./context/AuthContext";
 import DestinationDetail from "./pages/DestinationDetail";
 import Dashboard from "./pages/Dashboard";
 import AdminPage from "./pages/Adminpage";
@@ -19,7 +20,7 @@ interface Destination {
 function App() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [error, setError] = useState("");
-
+  const auth = useContext(AuthContext);
   useEffect(() => {
     axios
       .get<Destination[]>("http://localhost:5000/api/destinations")
@@ -34,14 +35,26 @@ function App() {
           TOURISM<span className="text-blue-600">.</span>
         </Link>
         <div className="flex items-center gap-6">
-          <Link to="/dashboard" className="text-sm font-medium text-gray-600">
-            Dashboard
-          </Link>
-          <Link to="/login">
-            <Button variant="outline" className="rounded-full">
-              Login
+          {auth?.token && (
+            <Link to="/dashboard" className="text-sm font-medium text-gray-600">
+              Dashboard
+            </Link>
+          )}
+          {auth?.token ? (
+            <Button
+              variant="outline"
+              onClick={auth.logout}
+              className="rounded-full"
+            >
+              Logout
             </Button>
-          </Link>
+          ) : (
+            <Link to="/login">
+              <Button variant="outline" className="rounded-full">
+                Login
+              </Button>
+            </Link>
+          )}
         </div>
       </nav>
 

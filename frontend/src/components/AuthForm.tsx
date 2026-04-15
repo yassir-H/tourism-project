@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,7 +17,7 @@ type FormData = z.infer<typeof schema>;
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -34,7 +34,7 @@ const AuthForm = () => {
 
       if (isLogin && res.data.token) {
         auth?.login(res.data.token);
-        alert("login successful");
+        navigate("/");
       } else {
         alert("registration Successful! please login");
         setIsLogin(true);
