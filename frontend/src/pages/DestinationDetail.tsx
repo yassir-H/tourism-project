@@ -146,7 +146,7 @@ const DestinationDetail = () => {
                 onClick={toggleFavorite}
                 className={`w-full rounded-full transition-colors ${isFavorite ? "text-red-500 hover:bg-red-50" : "text-gray-500"}`}
               >
-                {isFavorite ? " Saved" : " Add to Favorites"}
+                {isFavorite ? " Remove from Favorites" : " Add to Favorites"}
               </Button>
             </div>
           </Card>

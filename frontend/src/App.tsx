@@ -65,7 +65,7 @@ function App() {
             <div className="bg-white min-h-screen">
               <section className="h-[50vh] flex flex-col items-center justify-center text-center px-4 bg-gray-50 border-b">
                 <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4">
-                  Explore Beautiful Ethiopia.
+                  Explore The Beautiful World.
                 </h1>
                 <p className="text-gray-500 text-lg max-w-md mb-8">
                   Simple travel experiences for the modern minimalist.
@@ -83,54 +83,45 @@ function App() {
                 </Button>
               </section>
 
-              <section
-                id="list"
-                className="max-w-4xl mx-auto py-16 px-6 space-y-20"
-              >
-                {destinations.map((d) => (
-                  <div key={d._id} className="border-b pb-12 last:border-0">
-                    <div className="flex gap-4 overflow-x-auto pb-4">
-                      <div className="min-w-[90%] aspect-video rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
+              <section id="list" className="max-w-7xl mx-auto py-16 px-6">
+                <h2 className="text-3xl font-bold tracking-tight mb-12">
+                  All Destinations
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                  {destinations.map((d) => (
+                    <div key={d._id} className="group flex flex-col">
+                      <div className="relative overflow-hidden rounded-2xl aspect-[4/5] bg-gray-100 shadow-sm">
                         <img
                           src={d.image}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           alt={d.title}
                         />
                       </div>
-                      <div className="min-w-[90%] aspect-video rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
-                        <img
-                          src={d.image}
-                          className="w-full h-full object-cover opacity-50"
-                          alt={d.title}
-                        />
+                      <div className="mt-4 flex justify-between items-start">
+                        <div>
+                          <h3 className="font-bold text-xl text-gray-900">
+                            {d.title}
+                          </h3>
+                          <p className="text-gray-500 text-sm">
+                            {d.description
+                              ? d.description.substring(0, 45)
+                              : "no description available"}
+                            ...
+                          </p>
+                        </div>
+                        <p className="font-bold text-lg">${d.price}</p>
                       </div>
+                      <Link to={`/destination/${d._id}`} className="mt-4">
+                        <Button
+                          variant="secondary"
+                          className="w-full rounded-xl"
+                        >
+                          View Details
+                        </Button>
+                      </Link>
                     </div>
-
-                    <div className="mt-6 flex flex-col md:flex-row justify-between items-start gap-4">
-                      <div className="flex-1">
-                        <h3 className="text-3xl font-bold text-gray-900">
-                          {d.title}
-                        </h3>
-                        <p className="text-blue-600 font-medium">
-                          {d.location}
-                        </p>
-                        <p className="text-gray-600 mt-4 leading-relaxed">
-                          {d.description}
-                        </p>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <p className="text-3xl font-bold text-gray-900">
-                          ${d.price}
-                        </p>
-                        <Link to={`/destination/${d._id}`} className="mt-4">
-                          <Button className="rounded-full px-6">
-                            View Details
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </section>
             </div>
           }
