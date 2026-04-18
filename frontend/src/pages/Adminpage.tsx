@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 
 const AdminPage = () => {
   const auth = useContext(AuthContext);

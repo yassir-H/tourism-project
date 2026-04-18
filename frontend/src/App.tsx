@@ -19,13 +19,12 @@ interface Destination {
 
 function App() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
-  const [error, setError] = useState("");
   const auth = useContext(AuthContext);
   useEffect(() => {
     axios
       .get<Destination[]>("http://localhost:5000/api/destinations")
       .then((res) => setDestinations(res.data))
-      .catch((err) => setError(err.message));
+      .catch((err) => console.error(err.message));
   }, []);
 
   return (
