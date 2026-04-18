@@ -102,7 +102,7 @@ app.post('/api/bookings', authenticate, async (req,res) =>{
     }
 })
 // to fill the db we create a seed route
-app.post('/api/destinations/seed', async (req,res)=>{
+app.get('/api/destinations/seed', async (req,res)=>{
     const sampleDestinations = [
         {title: "paris", description: 'visit eiffel tower', location: 'france', price: 1200, image: 'https://unsplash.com'},
         {title: "bali retreat", description: 'relax on the beaches ', location: 'indonesia', price: 800, image: 'https://unsplash.com'},
