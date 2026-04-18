@@ -103,7 +103,7 @@ app.post('/api/bookings', authenticate, async (req,res) =>{
 })
 // to fill the db we create a seed route
 app.get('/api/destinations/seed', async (req,res)=>{
-    await Destination.deleteMany({});
+    
     const sampleDestinations = [
         {title: "paris", description: 'Visit The Eiffel Tower in the city of Love.', location: 'Paris, France', price: 1200, image: 'https://images.unsplash.com/photo-1639519306888-419e98f8a5b6?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZWlmZmVsJTIwdG93ZXIlMjBhdCUyMG5pZ2h0fGVufDB8fDB8fHww'},
         {title: "Bali Retreat", description: 'Relax on the beautiful island Bali  ', location: ' Bali, Indonesia', price: 800, image: 'https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YmFsaXxlbnwwfHwwfHx8MA%3D%3D'},
