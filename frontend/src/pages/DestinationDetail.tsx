@@ -16,13 +16,13 @@ const DestinationDetail = () => {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/destinations/${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/destinations/${id}`)
       .then((res) => setDestination(res.data))
       .catch((err) => console.error(err));
 
     if (auth?.token) {
       axios
-        .get("http://localhost:5000/api/dashboard", {
+        .get(`${import.meta.env.VITE_API_URL}/dashboard`, {
           headers: { Authorization: `Bearer ${auth.token}` },
         })
         .then((res) => {
@@ -48,7 +48,7 @@ const DestinationDetail = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/bookings",
+        `${import.meta.env.VITE_API_URL}/bookings`,
         {
           destinationId: id,
           date: date,
@@ -74,7 +74,7 @@ const DestinationDetail = () => {
     }
     try {
       await axios.post(
-        `http://localhost:5000/api/favorites/${id}`,
+        `${import.meta.env.VITE_API_URL}/favorites/${id}`,
         {},
         {
           headers: { Authorization: `Bearer ${auth?.token}` },

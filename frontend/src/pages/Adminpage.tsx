@@ -20,7 +20,7 @@ const AdminPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/destinations", form, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/destinations`, form, {
         headers: { Authorization: `Bearer ${auth.token}` },
       });
       alert("Destination added successfully!");

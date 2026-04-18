@@ -38,8 +38,9 @@ const AuthForm = () => {
   const onSubmit = async (data: FormData) => {
     try {
       const url = isLogin
-        ? "http://localhost:5000/api/login"
-        : "http://localhost:5000/api/register";
+        ? `${import.meta.env.VITE_API_URL}/login`
+        : `${import.meta.env.VITE_API_URL}/register`;
+
       const res = await axios.post(url, data);
 
       if (isLogin && res.data.token) {

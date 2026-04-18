@@ -9,7 +9,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (auth?.token) {
       axios
-        .get("http://localhost:5000/api/dashboard", {
+        .get(`${import.meta.env.VITE_API_URL}/dashboard`, {
           headers: { Authorization: `Bearer ${auth.token}` },
         })
         .then((res) => {

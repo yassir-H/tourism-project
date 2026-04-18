@@ -22,7 +22,7 @@ function App() {
   const auth = useContext(AuthContext);
   useEffect(() => {
     axios
-      .get<Destination[]>("http://localhost:5000/api/destinations")
+      .get<Destination[]>(`${import.meta.env.VITE_API_URL}/destinations`)
       .then((res) => setDestinations(res.data))
       .catch((err) => console.error(err.message));
   }, []);

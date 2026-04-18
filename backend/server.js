@@ -1,6 +1,7 @@
+require('dotenv').config();
+const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet')
@@ -9,7 +10,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 const rateLimit = require('express-rate-limit');
 const { number } = require('joi');
 
-mongoose.connect("mongodb://127.0.0.1:27017/tourism_db")
+mongoose.connect(process.env.MONGO_URI)
 .then(()=> console.log("connected to mongodb"))
 .catch((err)=> console.error("mongodb connection error", err));
 const app = express();
@@ -29,7 +30,7 @@ app.use(helmet());
 app.use(cors());
 
 app.use(cors({
-    origin: "http://localhost:5173"
+    origin: process.env.FRONTEND_URL || "http://localhost:5173"
 }))
 
 app.use(hpp());
@@ -48,7 +49,7 @@ const authenticate = (req,res,next) =>{
     }
     const token = authHeader.split(' ')[1];
 try{
-const verified = jwt.verify(token, 'secretKey');
+const verified = jwt.verify(token, process.env.JWT_SECRET);
 req.user = verified;
 next();
 }catch(err) {
@@ -199,9 +200,9 @@ app.post('/api/login', async (req, res) => {
     if (!validPassword) return res.status(400).send({ message: "Invalid Email or Password" });
 
     
-    const token = jwt.sign({ _id: user._id, role: user.role }, 'secretKey'); 
+    const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET); 
     res.send({ token, message: "Login Successful!" });
 });
-const port = 5000;
+const port = process.env.PORT || 5000;
 app.listen(port , ()=> console.log(`server running on port ${port}`)
 );
