@@ -8,6 +8,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { jwtDecode } from "jwt-decode";
 import {
   Card,
   CardContent,
@@ -43,7 +44,13 @@ const AuthForm = () => {
 
       if (isLogin && res.data.token) {
         auth?.login(res.data.token);
-        navigate("/");
+
+        const decoded: any = jwtDecode(res.data.token);
+        if (decoded.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       } else {
         alert("registration Successful! please login");
         setIsLogin(true);

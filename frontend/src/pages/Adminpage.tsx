@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
+import { Navigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const AdminPage = () => {
+  const auth = useContext(AuthContext);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -10,58 +14,57 @@ const AdminPage = () => {
     image: "",
   });
 
+  if (!auth?.token) {
+    return <Navigate to="/login" />;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/destinations", form);
-      alert("destination added");
+      await axios.post("http://localhost:5000/api/destinations", form, {
+        headers: { Authorization: `Bearer ${auth.token}` },
+      });
+      alert("Destination added successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to add destination");
+      alert("Failed to add destination. Are you an admin?");
     }
   };
 
   return (
-    <div className="p-8 max-w-md mx-auto">
-      <h1 className="text-2x1 font-bold mb-4">Add new destination</h1>
+    <div className="p-8 max-w-md mx-auto bg-white shadow-lg rounded-xl mt-10">
+      <h1 className="text-2xl font-bold mb-6">Add New Destination</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          aria-label="title"
-          placeholder="title"
-          type="text"
-          className="border p-2 w-full"
+          placeholder="Title"
+          className="border p-3 w-full rounded-lg"
           onChange={(e) => setForm({ ...form, title: e.target.value })}
         />
         <textarea
-          aria-label="description"
-          placeholder="description"
-          className="border p-2 w-full"
+          placeholder="Description"
+          className="border p-3 w-full rounded-lg"
           onChange={(e) => setForm({ ...form, description: e.target.value })}
         />
         <input
-          aria-label="location"
-          placeholder="location"
-          type="text"
-          className="border p-2 w-full"
+          placeholder="Location"
+          className="border p-3 w-full rounded-lg"
           onChange={(e) => setForm({ ...form, location: e.target.value })}
         />
         <input
-          aria-label="price"
-          placeholder="price"
+          placeholder="Price"
           type="number"
-          className="border p-2 w-full"
+          className="border p-3 w-full rounded-lg"
           onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
         />
         <input
-          aria-label="image"
-          placeholder="image URL"
-          className="border p-2 w-full"
+          placeholder="Image URL"
+          className="border p-3 w-full rounded-lg"
           onChange={(e) => setForm({ ...form, image: e.target.value })}
         />
         <button
           aria-label="submit"
           type="submit"
-          className="bg-blue-600 text-white p-2 w-full"
+          className="bg-blue-600 text-white p-3 w-full rounded-lg font-bold hover:bg-blue-700 transition"
         >
           Add Destination
         </button>
@@ -69,4 +72,5 @@ const AdminPage = () => {
     </div>
   );
 };
+
 export default AdminPage;

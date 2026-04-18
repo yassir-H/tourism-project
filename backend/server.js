@@ -74,7 +74,8 @@ const Destination = mongoose.model('Destination', DestinationSchema)
 const UserSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    favorites: [{type: mongoose.Schema.Types.ObjectId, ref: 'Destination'}]
+    favorites: [{type: mongoose.Schema.Types.ObjectId, ref: 'Destination'}],
+    role : {type : String, default : 'user'}
 })
 const User = mongoose.model('User', UserSchema);
 
@@ -176,7 +177,8 @@ app.post('/api/register', async (req, res) => {
         
         const user = new User({ 
             email: req.body.email, 
-            password: hashedPassword 
+            password: hashedPassword,
+            role : 'user'
         });
 
         await user.save();
@@ -197,7 +199,7 @@ app.post('/api/login', async (req, res) => {
     if (!validPassword) return res.status(400).send({ message: "Invalid Email or Password" });
 
     
-    const token = jwt.sign({ _id: user._id }, 'secretKey'); 
+    const token = jwt.sign({ _id: user._id, role: user.role }, 'secretKey'); 
     res.send({ token, message: "Login Successful!" });
 });
 const port = 5000;
